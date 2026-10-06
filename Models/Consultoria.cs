@@ -1,60 +1,76 @@
-namespace ClinicaApp.Models;
+using System;
 
-public class Consultoria
+namespace ClinicaApp
 {
-    public string IdConsultoria { get; set; } = Guid.NewGuid().ToString();
-    public DateTime FechaHora { get; set; } = DateTime.Now;
-    public Medico? Medico { get; set; }
-    public Paciente? Paciente { get; set; }
-    public string MotivoConsulta { get; set; } = string.Empty;
-    public string SignosVitales { get; set; } = string.Empty;
-    public string Sintomas { get; set; } = string.Empty;
-    public string Diagnostico { get; set; } = string.Empty;
-    public string PlanTratamiento { get; set; } = string.Empty;
-    public string NotasEvolucion { get; set; } = string.Empty;
-
-    public static Consultoria IniciarConsultoria(Paciente paciente, Medico medico)
+    public class Consultoria
     {
-        return new Consultoria
+        public string IdConsultoria { get; set; }
+        public DateTime FechaHora { get; set; }
+        public Medico Medico { get; set; }
+        public Paciente Paciente { get; set; }
+        public string MotivoConsulta { get; set; }
+        public string SignosVitales { get; set; }
+        public string Sintomas { get; set; }
+        public string Diagnostico { get; set; }
+        public string PlanTratamiento { get; set; }
+        public string NotasEvolucion { get; set; }
+
+        public Consultoria()
         {
-            Paciente = paciente,
-            Medico = medico,
-            FechaHora = DateTime.Now
-        };
-    }
+            IdConsultoria = "CON001";
+            FechaHora = DateTime.Now;
+            Medico = null;
+            Paciente = null;
+            MotivoConsulta = "";
+            SignosVitales = "";
+            Sintomas = "";
+            Diagnostico = "";
+            PlanTratamiento = "";
+            NotasEvolucion = "";
+        }
 
-    public void RegistrarSignosVitales(string signos)
-    {
-        SignosVitales = signos;
-    }
+        public static Consultoria IniciarConsultoria(Paciente paciente, Medico medico)
+        {
+            Consultoria consultoria = new Consultoria();
+            consultoria.Paciente = paciente;
+            consultoria.Medico = medico;
+            consultoria.FechaHora = DateTime.Now;
+            return consultoria;
+        }
 
-    public void RegistrarSintomas(string sintomas)
-    {
-        Sintomas = sintomas;
-    }
+        public void RegistrarSignosVitales(string signos)
+        {
+            SignosVitales = signos;
+        }
 
-    public void EstablecerDiagnostico(string diagnostico)
-    {
-        Diagnostico = diagnostico;
-    }
+        public void RegistrarSintomas(string sintomas)
+        {
+            this.Sintomas = sintomas;
+        }
 
-    public void CrearPlanTratamiento(string plan)
-    {
-        PlanTratamiento = plan;
-    }
+        public void EstablecerDiagnostico(string diagnostico)
+        {
+            this.Diagnostico = diagnostico;
+        }
 
-    public void AgregarNotaEvolucion(string nota)
-    {
-        NotasEvolucion = nota;
-    }
+        public void CrearPlanTratamiento(string plan)
+        {
+            PlanTratamiento = plan;
+        }
 
-    public void FinalizarConsultoria()
-    {
-        Console.WriteLine($"Consulta finalizada para {Paciente?.Nombre}");
-    }
+        public void AgregarNotaEvolucion(string nota)
+        {
+            NotasEvolucion = nota;
+        }
 
-    public string GenerarResumenClinico()
-    {
-        return $"Paciente: {Paciente?.Nombre} - Diagnóstico: {Diagnostico}";
+        public void FinalizarConsultoria()
+        {
+            Console.WriteLine("Consulta finalizada para " + Paciente.Nombre);
+        }
+
+        public string GenerarResumenClinico()
+        {
+            return "Paciente: " + Paciente.Nombre + " - Diagnostico: " + Diagnostico;
+        }
     }
 }

@@ -1,250 +1,218 @@
-using System.Drawing;
+using System;
 using System.Windows.Forms;
-using ClinicaApp.Models;
-using ClinicaApp.Services;
+using System.Collections.Generic;
 
-namespace ClinicaApp.Forms;
-
-public partial class FormPrincipal : Form
+namespace ClinicaApp.Forms
 {
-    private readonly ClinicaService _clinicaService = new();
-    private readonly ListBox _lstPacientes = new();
-    private readonly ListBox _lstCitas = new();
-    private readonly TextBox _txtNombre = new();
-    private readonly TextBox _txtApellido = new();
-    private readonly TextBox _txtCurp = new();
-    private readonly TextBox _txtTelefono = new();
-    private readonly Button _btnAgregarPaciente = new();
-    private readonly Button _btnCrearCita = new();
-    private readonly Button _btnGenerarReceta = new();
-
-    public FormPrincipal()
+    public partial class FormPrincipal : Form
     {
-        Text = "Clínica App";
-        Size = new Size(860, 560);
-        StartPosition = FormStartPosition.CenterScreen;
-        BackColor = Color.FromArgb(245, 247, 250);
+        private ClinicaService clinicaService;
+        private ListBox lstPacientes;
+        private ListBox lstCitas;
+        private TextBox txtNombre;
+        private TextBox txtApellido;
+        private TextBox txtCurp;
+        private TextBox txtTelefono;
+        private Button btnAgregarPaciente;
+        private Button btnCrearCita;
+        private Label labelPacientes;
+        private Label labelCitas;
 
-        InitializeComponent();
-        CargarDatosDemo();
-    }
-
-    private void InitializeComponent()
-    {
-        _txtNombre.Location = new Point(20, 30);
-        _txtNombre.Width = 140;
-        _txtNombre.PlaceholderText = "Nombre";
-
-        _txtApellido.Location = new Point(180, 30);
-        _txtApellido.Width = 140;
-        _txtApellido.PlaceholderText = "Apellido";
-
-        _txtCurp.Location = new Point(340, 30);
-        _txtCurp.Width = 150;
-        _txtCurp.PlaceholderText = "CURP";
-
-        _txtTelefono.Location = new Point(510, 30);
-        _txtTelefono.Width = 140;
-        _txtTelefono.PlaceholderText = "Teléfono";
-
-        _btnAgregarPaciente.Text = "Agregar paciente";
-        _btnAgregarPaciente.Location = new Point(20, 70);
-        _btnAgregarPaciente.Width = 150;
-        _btnAgregarPaciente.Click += BtnAgregarPaciente_Click;
-
-        _btnCrearCita.Text = "Crear cita";
-        _btnCrearCita.Location = new Point(190, 70);
-        _btnCrearCita.Width = 140;
-        _btnCrearCita.Click += BtnCrearCita_Click;
-
-        _btnGenerarReceta.Text = "Generar receta";
-        _btnGenerarReceta.Location = new Point(350, 70);
-        _btnGenerarReceta.Width = 150;
-        _btnGenerarReceta.Click += BtnGenerarReceta_Click;
-
-        _lstPacientes.Location = new Point(20, 120);
-        _lstPacientes.Size = new Size(360, 330);
-
-        _lstCitas.Location = new Point(410, 120);
-        _lstCitas.Size = new Size(360, 330);
-
-        Controls.Add(_txtNombre);
-        Controls.Add(_txtApellido);
-        Controls.Add(_txtCurp);
-        Controls.Add(_txtTelefono);
-        Controls.Add(_btnAgregarPaciente);
-        Controls.Add(_btnCrearCita);
-        Controls.Add(_btnGenerarReceta);
-        Controls.Add(_lstPacientes);
-        Controls.Add(_lstCitas);
-    }
-
-    private void CargarDatosDemo()
-    {
-        var paciente1 = new Paciente
+        public FormPrincipal()
         {
-            Nombre = "Ana",
-            ApellidoPaterno = "López",
-            ApellidoMaterno = "Ramírez",
-            Curp = "LORA850101HDF",
-            FechaNacimiento = new DateTime(1985, 1, 10),
-            Sexo = "Femenino",
-            Telefono = "5512345678",
-            Domicilio = "Calle 123",
-            NumeroSeguroSocial = "123456789",
-            HistoriaClinicaResumen = "Sin antecedentes relevantes",
-            Alergias = "Ninguna",
-            Expediente = new ExpedienteClinico
+            clinicaService = new ClinicaService();
+            InicializarComponentes();
+            CargarDatosDemo();
+        }
+
+        private void InicializarComponentes()
+        {
+            this.Text = "Clinica App";
+            this.Size = new System.Drawing.Size(860, 560);
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            labelPacientes = new Label();
+            labelPacientes.Text = "Pacientes:";
+            labelPacientes.Location = new System.Drawing.Point(20, 100);
+            labelPacientes.Width = 100;
+
+            labelCitas = new Label();
+            labelCitas.Text = "Citas:";
+            labelCitas.Location = new System.Drawing.Point(410, 100);
+            labelCitas.Width = 100;
+
+            txtNombre = new TextBox();
+            txtNombre.Location = new System.Drawing.Point(20, 30);
+            txtNombre.Width = 140;
+            txtNombre.Text = "Nombre";
+
+            txtApellido = new TextBox();
+            txtApellido.Location = new System.Drawing.Point(180, 30);
+            txtApellido.Width = 140;
+            txtApellido.Text = "Apellido";
+
+            txtCurp = new TextBox();
+            txtCurp.Location = new System.Drawing.Point(340, 30);
+            txtCurp.Width = 150;
+            txtCurp.Text = "CURP";
+
+            txtTelefono = new TextBox();
+            txtTelefono.Location = new System.Drawing.Point(510, 30);
+            txtTelefono.Width = 140;
+            txtTelefono.Text = "Telefono";
+
+            btnAgregarPaciente = new Button();
+            btnAgregarPaciente.Text = "Agregar paciente";
+            btnAgregarPaciente.Location = new System.Drawing.Point(20, 70);
+            btnAgregarPaciente.Width = 150;
+            btnAgregarPaciente.Click += new EventHandler(BtnAgregarPaciente_Click);
+
+            btnCrearCita = new Button();
+            btnCrearCita.Text = "Crear cita";
+            btnCrearCita.Location = new System.Drawing.Point(190, 70);
+            btnCrearCita.Width = 140;
+            btnCrearCita.Click += new EventHandler(BtnCrearCita_Click);
+
+            lstPacientes = new ListBox();
+            lstPacientes.Location = new System.Drawing.Point(20, 120);
+            lstPacientes.Size = new System.Drawing.Size(360, 330);
+
+            lstCitas = new ListBox();
+            lstCitas.Location = new System.Drawing.Point(410, 120);
+            lstCitas.Size = new System.Drawing.Size(360, 330);
+
+            this.Controls.Add(txtNombre);
+            this.Controls.Add(txtApellido);
+            this.Controls.Add(txtCurp);
+            this.Controls.Add(txtTelefono);
+            this.Controls.Add(btnAgregarPaciente);
+            this.Controls.Add(btnCrearCita);
+            this.Controls.Add(labelPacientes);
+            this.Controls.Add(labelCitas);
+            this.Controls.Add(lstPacientes);
+            this.Controls.Add(lstCitas);
+        }
+
+        private void CargarDatosDemo()
+        {
+            Paciente paciente1 = new Paciente();
+            paciente1.Nombre = "Ana";
+            paciente1.ApellidoPaterno = "Lopez";
+            paciente1.ApellidoMaterno = "Ramirez";
+            paciente1.Curp = "LORA850101HDF";
+            paciente1.FechaNacimiento = new DateTime(1985, 1, 10);
+            paciente1.Sexo = "Femenino";
+            paciente1.Telefono = "5512345678";
+            paciente1.Domicilio = "Calle 123";
+            paciente1.NumeroSeguroSocial = "123456789";
+            paciente1.HistoriaClinicaResumen = "Sin antecedentes relevantes";
+            paciente1.Alergias = "Ninguna";
+
+            Medico medico1 = new Medico();
+            medico1.Nombre = "Carlos";
+            medico1.ApellidoPaterno = "Garcia";
+            medico1.ApellidoMaterno = "Santos";
+            medico1.Especialidad = "Cardiologia";
+            medico1.Oficina = "Consultorio 2";
+            medico1.Departamento = "Cardiologia";
+            medico1.TipoContrato = "Tiempo completo";
+            medico1.FirmaDigital = "firma123";
+
+            clinicaService.AgregarPaciente(paciente1);
+            clinicaService.AgregarMedico(medico1);
+
+            Cita cita = new Cita();
+            cita.Paciente = paciente1;
+            cita.Medico = medico1;
+            cita.FechaCita = DateTime.Today.AddDays(2);
+            cita.HoraCita = new TimeSpan(10, 30, 0);
+            cita.Consultorio = "Consultorio 2";
+            cita.MotivoConsulta = "Chequeo general";
+            cita.Prioridad = "Alta";
+            cita.Estado = EstadoCita.Programada;
+
+            clinicaService.AgregarCita(cita);
+            paciente1.AgendarCita(cita);
+
+            RefrescarListas();
+        }
+
+        private void BtnAgregarPaciente_Click(object sender, EventArgs e)
+        {
+            if (txtNombre.Text == "")
             {
-                Paciente = new Paciente
+                MessageBox.Show("Ingrese el nombre del paciente.");
+                return;
+            }
+
+            Paciente paciente = new Paciente();
+            paciente.Nombre = txtNombre.Text;
+            paciente.ApellidoPaterno = txtApellido.Text;
+            paciente.Curp = txtCurp.Text;
+            paciente.Telefono = txtTelefono.Text;
+            paciente.HistoriaClinicaResumen = "Creado desde la app";
+            paciente.Alergias = "Ninguna";
+
+            clinicaService.AgregarPaciente(paciente);
+            RefrescarListas();
+
+            txtNombre.Text = "";
+            txtApellido.Text = "";
+            txtCurp.Text = "";
+            txtTelefono.Text = "";
+        }
+
+        private void BtnCrearCita_Click(object sender, EventArgs e)
+        {
+            List<Paciente> pacientes = clinicaService.ObtenerPacientes();
+            if (pacientes.Count == 0)
+            {
+                MessageBox.Show("Debe agregar al menos un paciente.");
+                return;
+            }
+
+            Paciente paciente = pacientes[0];
+            Medico medico = new Medico();
+            medico.Nombre = "Dr. Luis";
+            medico.ApellidoPaterno = "Perez";
+            medico.Especialidad = "Medicina General";
+            medico.Oficina = "Consultorio 1";
+            medico.Departamento = "Consulta externa";
+            medico.FirmaDigital = "firma456";
+
+            Cita cita = new Cita();
+            cita.Paciente = paciente;
+            cita.Medico = medico;
+            cita.FechaCita = DateTime.Today.AddDays(3);
+            cita.HoraCita = new TimeSpan(9, 0, 0);
+            cita.Consultorio = "Consultorio 1";
+            cita.MotivoConsulta = "Consulta de seguimiento";
+            cita.Prioridad = "Media";
+            cita.Estado = EstadoCita.Programada;
+
+            clinicaService.AgregarCita(cita);
+            paciente.AgendarCita(cita);
+            RefrescarListas();
+        }
+
+        private void RefrescarListas()
+        {
+            lstPacientes.Items.Clear();
+            List<Paciente> pacientes = clinicaService.ObtenerPacientes();
+            for (int i = 0; i < pacientes.Count; i++)
+            {
+                lstPacientes.Items.Add(pacientes[i].Nombre + " " + pacientes[i].ApellidoPaterno + " - " + pacientes[i].Curp);
+            }
+
+            lstCitas.Items.Clear();
+            List<Cita> citas = clinicaService.ObtenerCitas();
+            for (int i = 0; i < citas.Count; i++)
+            {
+                if (citas[i].Paciente != null && citas[i].Medico != null)
                 {
-                    Nombre = "Ana",
-                    ApellidoPaterno = "López"
-                },
-                UnidadAdscrita = "Hospital Central",
-                AntecedentesHeredofamiliares = "Padre con hipertensión",
-                AntecedentesPersonalesPatologicos = "Asma leve",
-                AntecedentesNoPatologicos = "No fuma, no consume alcohol"
-            }
-        };
-
-        var medico1 = new Medico
-        {
-            Nombre = "Carlos",
-            ApellidoPaterno = "García",
-            ApellidoMaterno = "Santos",
-            Especialidad = "Cardiología",
-            Oficina = "Consultorio 2",
-            Departamento = "Cardiología",
-            TipoContrato = "Tiempo completo",
-            FirmaDigital = "firma123"
-        };
-
-        _clinicaService.AgregarPaciente(paciente1);
-
-        var cita = new Cita
-        {
-            Paciente = paciente1,
-            Medico = medico1,
-            FechaCita = DateTime.Today.AddDays(2),
-            HoraCita = new TimeSpan(10, 30, 0),
-            Consultorio = "Consultorio 2",
-            MotivoConsulta = "Chequeo general",
-            Prioridad = "Alta",
-            Estado = EstadoCita.Programada
-        };
-
-        _clinicaService.AgregarCita(cita);
-        paciente1.AgendarCita(cita);
-
-        RefrescarListas();
-    }
-
-    private void BtnAgregarPaciente_Click(object sender, EventArgs e)
-    {
-        if (string.IsNullOrWhiteSpace(_txtNombre.Text))
-        {
-            MessageBox.Show("Ingrese el nombre del paciente.");
-            return;
-        }
-
-        var paciente = new Paciente
-        {
-            Nombre = _txtNombre.Text,
-            ApellidoPaterno = _txtApellido.Text,
-            Curp = _txtCurp.Text,
-            Telefono = _txtTelefono.Text,
-            HistoriaClinicaResumen = "Creado desde la app",
-            Alergias = "Ninguna",
-            Expediente = new ExpedienteClinico
-            {
-                Paciente = new Paciente { Nombre = _txtNombre.Text },
-                UnidadAdscrita = "Hospital Central"
-            }
-        };
-
-        _clinicaService.AgregarPaciente(paciente);
-        RefrescarListas();
-
-        _txtNombre.Clear();
-        _txtApellido.Clear();
-        _txtCurp.Clear();
-        _txtTelefono.Clear();
-    }
-
-    private void BtnCrearCita_Click(object sender, EventArgs e)
-    {
-        if (_clinicaService.Pacientes.Count == 0)
-        {
-            MessageBox.Show("Debe agregar al menos un paciente.");
-            return;
-        }
-
-        var paciente = _clinicaService.Pacientes[0];
-        var medico = new Medico
-        {
-            Nombre = "Dr. Luis",
-            ApellidoPaterno = "Pérez",
-            Especialidad = "Medicina General",
-            Oficina = "Consultorio 1",
-            Departamento = "Consulta externa",
-            FirmaDigital = "firma456"
-        };
-
-        var cita = new Cita
-        {
-            Paciente = paciente,
-            Medico = medico,
-            FechaCita = DateTime.Today.AddDays(3),
-            HoraCita = new TimeSpan(9, 0, 0),
-            Consultorio = "Consultorio 1",
-            MotivoConsulta = "Consulta de seguimiento",
-            Prioridad = "Media",
-            Estado = EstadoCita.Programada
-        };
-
-        _clinicaService.AgregarCita(cita);
-        paciente.AgendarCita(cita);
-        RefrescarListas();
-    }
-
-    private void BtnGenerarReceta_Click(object sender, EventArgs e)
-    {
-        if (_clinicaService.Pacientes.Count == 0)
-        {
-            MessageBox.Show("Debe haber un paciente para generar la receta.");
-            return;
-        }
-
-        var paciente = _clinicaService.Pacientes[0];
-        var medico = new Medico
-        {
-            Nombre = "Carlos",
-            ApellidoPaterno = "García",
-            Especialidad = "Cardiología",
-            FirmaDigital = "firma123"
-        };
-
-        var receta = medico.GenerarReceta(paciente, "Paracetamol");
-        _clinicaService.AgregarReceta(receta);
-
-        MessageBox.Show($"Receta creada: {receta.FolioReceta}");
-    }
-
-    private void RefrescarListas()
-    {
-        _lstPacientes.Items.Clear();
-        foreach (var paciente in _clinicaService.Pacientes)
-        {
-            _lstPacientes.Items.Add($"{paciente.Nombre} {paciente.ApellidoPaterno} - {paciente.Curp}");
-        }
-
-        _lstCitas.Items.Clear();
-        foreach (var cita in _clinicaService.Citas)
-        {
-            if (cita.Paciente is not null && cita.Medico is not null)
-            {
-                _lstCitas.Items.Add($"{cita.FechaCita:dd/MM/yyyy} {cita.HoraCita} - {cita.Paciente.Nombre} con {cita.Medico.Nombre}");
+                    lstCitas.Items.Add(citas[i].FechaCita.ToString("dd/MM/yyyy") + " " + citas[i].HoraCita.ToString() + 
+                        " - " + citas[i].Paciente.Nombre + " con " + citas[i].Medico.Nombre);
+                }
             }
         }
     }

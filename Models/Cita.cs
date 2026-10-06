@@ -1,39 +1,57 @@
-namespace ClinicaApp.Models;
+using System;
 
-public class Cita
+namespace ClinicaApp
 {
-    public string IdCita { get; set; } = Guid.NewGuid().ToString();
-    public DateTime FechaSolicitud { get; set; } = DateTime.Now;
-    public DateTime FechaCita { get; set; } = DateTime.Today;
-    public TimeSpan HoraCita { get; set; } = new(9, 0, 0);
-    public Medico? Medico { get; set; }
-    public Paciente? Paciente { get; set; }
-    public string Consultorio { get; set; } = string.Empty;
-    public EstadoCita Estado { get; set; } = EstadoCita.Programada;
-    public string MotivoConsulta { get; set; } = string.Empty;
-    public string Prioridad { get; set; } = string.Empty;
-
-    public bool VerificarDisponibilidad()
+    public class Cita
     {
-        return FechaCita >= DateTime.Today && HoraCita >= TimeSpan.Zero;
-    }
+        public string IdCita { get; set; }
+        public DateTime FechaSolicitud { get; set; }
+        public DateTime FechaCita { get; set; }
+        public TimeSpan HoraCita { get; set; }
+        public Medico Medico { get; set; }
+        public Paciente Paciente { get; set; }
+        public string Consultorio { get; set; }
+        public EstadoCita Estado { get; set; }
+        public string MotivoConsulta { get; set; }
+        public string Prioridad { get; set; }
 
-    public void ConfirmarCita()
-    {
-        Estado = EstadoCita.Programada;
-    }
+        public Cita()
+        {
+            IdCita = "C001";
+            FechaSolicitud = DateTime.Now;
+            FechaCita = DateTime.Now;
+            HoraCita = new TimeSpan(9, 0, 0);
+            Medico = null;
+            Paciente = null;
+            Consultorio = "";
+            Estado = EstadoCita.Programada;
+            MotivoConsulta = "";
+            Prioridad = "";
+        }
 
-    public void CancelarCita(string motivo)
-    {
-        Estado = EstadoCita.Cancelada;
-        MotivoConsulta = motivo;
-    }
+        public bool VerificarDisponibilidad()
+        {
+            return FechaCita >= DateTime.Today && HoraCita >= TimeSpan.Zero;
+        }
 
-    public void GenerarRecordatorio()
-    {
-        if (Paciente is null || Medico is null)
-            return;
+        public void ConfirmarCita()
+        {
+            Estado = EstadoCita.Programada;
+        }
 
-        Console.WriteLine($"Recordatorio: Cita para {Paciente.Nombre} con Dr. {Medico.Nombre} el {FechaCita:dd/MM/yyyy} a las {HoraCita}");
+        public void CancelarCita(string motivo)
+        {
+            Estado = EstadoCita.Cancelada;
+            MotivoConsulta = motivo;
+        }
+
+        public void GenerarRecordatorio()
+        {
+            if (Paciente != null && Medico != null)
+            {
+                Console.WriteLine("Recordatorio: Cita para " + Paciente.Nombre + " con Dr. " + Medico.Nombre + 
+                    " el " + FechaCita.ToString("dd/MM/yyyy") + " a las " + HoraCita.ToString());
+            }
+        }
     }
 }

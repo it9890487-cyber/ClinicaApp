@@ -1,82 +1,58 @@
-using ClinicaApp.Interfaces;
+using System;
 
-namespace ClinicaApp.Models;
-
-public class Medico : Trabajador, IAtencionMedica
+namespace ClinicaApp
 {
-    public string CedulaProfesional { get; set; } = string.Empty;
-    public string Especialidad { get; set; } = string.Empty;
-    public string EspecialidadInstitucion { get; set; } = string.Empty;
-    public string DomicilioParticular { get; set; } = string.Empty;
-    public string Telefono { get; set; } = string.Empty;
-    public string FirmaDigital { get; set; } = string.Empty;
-    public string HorarioAtencion { get; set; } = string.Empty;
-    public bool EstatusActivo { get; set; } = true;
-    public string IdMedico { get; set; } = Guid.NewGuid().ToString();
-
-    public override string ObtenerInfoCompleta()
+    public class Medico : Trabajador
     {
-        return $"{Nombre} {ApellidoPaterno} {ApellidoMaterno} - Médico - {Especialidad}";
-    }
+        public string CedulaProfesional { get; set; }
+        public string Especialidad { get; set; }
+        public string EspecialidadInstitucion { get; set; }
+        public string DomicilioParticular { get; set; }
+        public string TelefonoMedico { get; set; }
+        public string FirmaDigital { get; set; }
+        public string HorarioAtencion { get; set; }
+        public bool EstatusActivo { get; set; }
 
-    public override bool ActualizarDatos()
-    {
-        return !string.IsNullOrWhiteSpace(Nombre) && !string.IsNullOrWhiteSpace(Especialidad);
-    }
-
-    public RecetaMedica GenerarReceta(Paciente paciente, string medicamento)
-    {
-        var receta = new RecetaMedica
+        public Medico()
         {
-            FolioReceta = Guid.NewGuid().ToString()[..8],
-            Medico = this,
-            Paciente = paciente,
-            DiagnosticoPrincipal = "Consulta médica",
-            IndicacionesGenerales = "Tomar según indicación del médico"
-        };
+            CedulaProfesional = "";
+            Especialidad = "";
+            EspecialidadInstitucion = "";
+            DomicilioParticular = "";
+            TelefonoMedico = "";
+            FirmaDigital = "";
+            HorarioAtencion = "";
+            EstatusActivo = true;
+        }
 
-        receta.AgregarMedicamento(new Medicamento
+        public override string ObtenerInfoCompleta()
         {
-            IdMedicamento = 1,
-            Nombre = medicamento,
-            Dosis = "1 tableta",
-            Frecuencia = "Cada 8 horas"
-        });
+            return Nombre + " " + ApellidoPaterno + " - Medico - " + Especialidad;
+        }
 
-        return receta;
-    }
-
-    public ExpedienteClinico ConsultarExpediente(Paciente paciente)
-    {
-        return paciente.ConsultarExpediente();
-    }
-
-    public Cita ProgramarCirugia(Paciente paciente, DateTime fecha)
-    {
-        return new Cita
+        public override bool ActualizarDatos()
         {
-            Paciente = paciente,
-            Medico = this,
-            FechaCita = fecha,
-            HoraCita = new TimeSpan(9, 0, 0),
-            Estado = EstadoCita.Programada
-        };
-    }
+            return Nombre != "" && Especialidad != "";
+        }
 
-    public void ActualizarDatosProfesionales() { }
+        public RecetaMedica GenerarReceta(Paciente paciente)
+        {
+            RecetaMedica receta = new RecetaMedica();
+            receta.Medico = this;
+            receta.Paciente = paciente;
+            receta.DiagnosticoPrincipal = "Consulta medica";
+            receta.IndicacionesGenerales = "Tomar segun indicacion del medico";
+            return receta;
+        }
 
-    public bool ValidarFirma()
-    {
-        return !string.IsNullOrWhiteSpace(FirmaDigital);
-    }
+        public void Atender(Paciente paciente)
+        {
+            Console.WriteLine("El medico " + Nombre + " atiende a " + paciente.Nombre);
+        }
 
-    public void Atender(Paciente paciente)
-    {
-        Console.WriteLine($"El médico {Nombre} atiende a {paciente.Nombre} {paciente.ApellidoPaterno}");
-    }
-
-    public void RegistrarDiagnostico(Paciente paciente, string diagnostico)
-    {
-        Console.WriteLine($"Diagnóstico registrado para {paciente.Nombre}: {diagnostico}");
+        public void RegistrarDiagnostico(Paciente paciente, string diagnostico)
+        {
+            Console.WriteLine("Diagnostico registrado para " + paciente.Nombre + ": " + diagnostico);
+        }
     }
 }

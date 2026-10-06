@@ -1,9 +1,11 @@
-using ClinicaApp.Models;
+using System;
+using System.Collections.Generic;
 
-namespace ClinicaApp.Interfaces;
-
-public interface IAtencionMedica
+namespace ClinicaApp
 {
-    void Atender(Paciente paciente);
-    void RegistrarDiagnostico(Paciente paciente, string diagnostico);
+    public interface IAtencionMedica
+    {
+        void Atender(Paciente paciente);
+        void RegistrarDiagnostico(Paciente paciente, string diagnostico);
+    }
 }

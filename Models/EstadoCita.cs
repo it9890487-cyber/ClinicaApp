@@ -1,8 +1,9 @@
-namespace ClinicaApp.Models;
-
-public enum EstadoCita
+namespace ClinicaApp
 {
-    Programada,
-    Cancelada,
-    Completada
+    public enum EstadoCita
+    {
+        Programada,
+        Cancelada,
+        Completada
+    }
 }

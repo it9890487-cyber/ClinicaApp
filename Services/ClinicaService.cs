@@ -1,34 +1,84 @@
-using ClinicaApp.Models;
+using System.Collections.Generic;
 
-namespace ClinicaApp.Services;
-
-public class ClinicaService
+namespace ClinicaApp
 {
-    private readonly List<Paciente> _pacientes = new();
-    private readonly List<Cita> _citas = new();
-    private readonly List<RecetaMedica> _recetas = new();
-
-    public List<Paciente> Pacientes => _pacientes;
-    public List<Cita> Citas => _citas;
-    public List<RecetaMedica> Recetas => _recetas;
-
-    public void AgregarPaciente(Paciente paciente)
+    public class ClinicaService
     {
-        _pacientes.Add(paciente);
-    }
+        private List<Paciente> pacientes;
+        private List<Cita> citas;
+        private List<RecetaMedica> recetas;
+        private List<Medico> medicos;
+        private List<Enfermero> enfermeros;
 
-    public void AgregarCita(Cita cita)
-    {
-        _citas.Add(cita);
-    }
+        public ClinicaService()
+        {
+            pacientes = new List<Paciente>();
+            citas = new List<Cita>();
+            recetas = new List<RecetaMedica>();
+            medicos = new List<Medico>();
+            enfermeros = new List<Enfermero>();
+        }
 
-    public void AgregarReceta(RecetaMedica receta)
-    {
-        _recetas.Add(receta);
-    }
+        public List<Paciente> ObtenerPacientes()
+        {
+            return pacientes;
+        }
 
-    public Paciente? BuscarPaciente(string nombre)
-    {
-        return _pacientes.FirstOrDefault(p => p.Nombre.StartsWith(nombre, StringComparison.OrdinalIgnoreCase));
+        public List<Cita> ObtenerCitas()
+        {
+            return citas;
+        }
+
+        public List<RecetaMedica> ObtenerRecetas()
+        {
+            return recetas;
+        }
+
+        public List<Medico> ObtenerMedicos()
+        {
+            return medicos;
+        }
+
+        public List<Enfermero> ObtenerEnfermeros()
+        {
+            return enfermeros;
+        }
+
+        public void AgregarPaciente(Paciente paciente)
+        {
+            pacientes.Add(paciente);
+        }
+
+        public void AgregarCita(Cita cita)
+        {
+            citas.Add(cita);
+        }
+
+        public void AgregarReceta(RecetaMedica receta)
+        {
+            recetas.Add(receta);
+        }
+
+        public void AgregarMedico(Medico medico)
+        {
+            medicos.Add(medico);
+        }
+
+        public void AgregarEnfermero(Enfermero enfermero)
+        {
+            enfermeros.Add(enfermero);
+        }
+
+        public Paciente BuscarPaciente(string nombre)
+        {
+            for (int i = 0; i < pacientes.Count; i++)
+            {
+                if (pacientes[i].Nombre == nombre)
+                {
+                    return pacientes[i];
+                }
+            }
+            return null;
+        }
     }
 }

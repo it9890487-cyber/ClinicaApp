@@ -1,42 +1,59 @@
-namespace ClinicaApp.Models;
+using System;
+using System.Collections.Generic;
 
-public class RecetaMedica
+namespace ClinicaApp
 {
-    public string FolioReceta { get; set; } = string.Empty;
-    public DateTime FechaEmision { get; set; } = DateTime.Now;
-    public Medico? Medico { get; set; }
-    public Paciente? Paciente { get; set; }
-    public string DiagnosticoPrincipal { get; set; } = string.Empty;
-    public string IndicacionesGenerales { get; set; } = string.Empty;
-    public List<Medicamento> Medicamentos { get; set; } = new();
-
-    public RecetaMedica GenerarReceta(int idMedico, int idPaciente)
+    public class RecetaMedica
     {
-        return this;
-    }
+        public string FolioReceta { get; set; }
+        public DateTime FechaEmision { get; set; }
+        public Medico Medico { get; set; }
+        public Paciente Paciente { get; set; }
+        public string DiagnosticoPrincipal { get; set; }
+        public string IndicacionesGenerales { get; set; }
+        public List<Medicamento> Medicamentos { get; set; }
 
-    public void AgregarMedicamento(Medicamento medicamento)
-    {
-        Medicamentos.Add(medicamento);
-    }
+        public RecetaMedica()
+        {
+            FolioReceta = "REC001";
+            FechaEmision = DateTime.Now;
+            Medico = null;
+            Paciente = null;
+            DiagnosticoPrincipal = "";
+            IndicacionesGenerales = "";
+            Medicamentos = new List<Medicamento>();
+        }
 
-    public void EliminarMedicamento(int idMedicamento)
-    {
-        Medicamentos.RemoveAll(m => m.IdMedicamento == idMedicamento);
-    }
+        public RecetaMedica GenerarReceta(int idMedico, int idPaciente)
+        {
+            return this;
+        }
 
-    public void ImprimirReceta()
-    {
-        Console.WriteLine($"Imprimiendo receta {FolioReceta}");
-    }
+        public void AgregarMedicamento(Medicamento medicamento)
+        {
+            Medicamentos.Add(medicamento);
+        }
 
-    public bool ValidarFirmaDigital()
-    {
-        return Medico is not null && !string.IsNullOrWhiteSpace(Medico.FirmaDigital);
-    }
+        public void EliminarMedicamento(int idMedicamento)
+        {
+            for (int i = 0; i < Medicamentos.Count; i++)
+            {
+                if (Medicamentos[i].IdMedicamento == idMedicamento)
+                {
+                    Medicamentos.RemoveAt(i);
+                    break;
+                }
+            }
+        }
 
-    public List<RecetaMedica> ConsultarHistorialRecetas(int idPaciente)
-    {
-        return new List<RecetaMedica>();
+        public void ImprimirReceta()
+        {
+            Console.WriteLine("Imprimiendo receta " + FolioReceta);
+        }
+
+        public bool ValidarFirmaDigital()
+        {
+            return Medico != null && Medico.FirmaDigital != "";
+        }
     }
 }

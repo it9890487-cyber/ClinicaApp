@@ -1,8 +1,18 @@
-namespace ClinicaApp.Models;
+using System;
 
-public class Reporte
+namespace ClinicaApp
 {
-    public string Titulo { get; set; } = string.Empty;
-    public string Contenido { get; set; } = string.Empty;
-    public DateTime FechaGeneracion { get; set; } = DateTime.Now;
+    public class Reporte
+    {
+        public string Titulo { get; set; }
+        public string Contenido { get; set; }
+        public string Fecha { get; set; }
+
+        public Reporte()
+        {
+            Titulo = "";
+            Contenido = "";
+            Fecha = DateTime.Now.ToString();
+        }
+    }
 }

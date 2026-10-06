@@ -1,59 +1,76 @@
-namespace ClinicaApp.Models;
+using System;
+using System.Collections.Generic;
 
-public class ExpedienteClinico
+namespace ClinicaApp
 {
-    public string IdExpediente { get; set; } = Guid.NewGuid().ToString();
-    public Paciente? Paciente { get; set; }
-    public DateTime FechaApertura { get; set; } = DateTime.Now;
-    public string UnidadAdscrita { get; set; } = string.Empty;
-    public Medico? MedicoResponsable { get; set; }
-    public List<Consultoria> ListaConsultas { get; set; } = new();
-    public List<RecetaMedica> ListaRecetas { get; set; } = new();
-    public string AntecedentesHeredofamiliares { get; set; } = string.Empty;
-    public string AntecedentesPersonalesPatologicos { get; set; } = string.Empty;
-    public string AntecedentesNoPatologicos { get; set; } = string.Empty;
-
-    public static ExpedienteClinico CrearExpediente(Paciente paciente)
+    public class ExpedienteClinico
     {
-        return new ExpedienteClinico
+        public string IdExpediente { get; set; }
+        public Paciente Paciente { get; set; }
+        public DateTime FechaApertura { get; set; }
+        public string UnidadAdscrita { get; set; }
+        public Medico MedicoResponsable { get; set; }
+        public List<Consultoria> ListaConsultas { get; set; }
+        public List<RecetaMedica> ListaRecetas { get; set; }
+        public string AntecedentesHeredofamiliares { get; set; }
+        public string AntecedentesPersonalesPatologicos { get; set; }
+        public string AntecedentesNoPatologicos { get; set; }
+
+        public ExpedienteClinico()
         {
-            Paciente = paciente,
-            FechaApertura = DateTime.Now
-        };
-    }
+            IdExpediente = "EXP001";
+            Paciente = null;
+            FechaApertura = DateTime.Now;
+            UnidadAdscrita = "";
+            MedicoResponsable = null;
+            ListaConsultas = new List<Consultoria>();
+            ListaRecetas = new List<RecetaMedica>();
+            AntecedentesHeredofamiliares = "";
+            AntecedentesPersonalesPatologicos = "";
+            AntecedentesNoPatologicos = "";
+        }
 
-    public void AgregarConsulta(Consultoria consulta)
-    {
-        ListaConsultas.Add(consulta);
-    }
+        public static ExpedienteClinico CrearExpediente(Paciente paciente)
+        {
+            ExpedienteClinico expediente = new ExpedienteClinico();
+            expediente.Paciente = paciente;
+            expediente.FechaApertura = DateTime.Now;
+            return expediente;
+        }
 
-    public void AgregarReceta(RecetaMedica receta)
-    {
-        ListaRecetas.Add(receta);
-    }
+        public void AgregarConsulta(Consultoria consulta)
+        {
+            ListaConsultas.Add(consulta);
+        }
 
-    public string ConsultarResumen()
-    {
-        return $"Expediente: {IdExpediente} - Paciente: {Paciente?.Nombre}";
-    }
+        public void AgregarReceta(RecetaMedica receta)
+        {
+            ListaRecetas.Add(receta);
+        }
 
-    public void ActualizarAntecedentes(string tipo, string info)
-    {
-        if (tipo == "heredofamiliares")
-            AntecedentesHeredofamiliares = info;
-        else if (tipo == "patologicos")
-            AntecedentesPersonalesPatologicos = info;
-        else if (tipo == "nopatologicos")
-            AntecedentesNoPatologicos = info;
-    }
+        public string ConsultarResumen()
+        {
+            return "Expediente: " + IdExpediente + " - Paciente: " + Paciente.Nombre;
+        }
 
-    public string GenerarConstancia()
-    {
-        return $"Constancia médica del expediente {IdExpediente}";
-    }
+        public void ActualizarAntecedentes(string tipo, string info)
+        {
+            if (tipo == "heredofamiliares")
+                AntecedentesHeredofamiliares = info;
+            else if (tipo == "patologicos")
+                AntecedentesPersonalesPatologicos = info;
+            else if (tipo == "nopatologicos")
+                AntecedentesNoPatologicos = info;
+        }
 
-    public void CerrarExpediente()
-    {
-        Console.WriteLine($"Expediente {IdExpediente} cerrado.");
+        public string GenerarConstancia()
+        {
+            return "Constancia medica del expediente " + IdExpediente;
+        }
+
+        public void CerrarExpediente()
+        {
+            Console.WriteLine("Expediente " + IdExpediente + " cerrado.");
+        }
     }
 }

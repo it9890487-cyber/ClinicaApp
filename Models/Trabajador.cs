@@ -1,35 +1,48 @@
-namespace ClinicaApp.Models;
+using System;
 
-public abstract class Trabajador
+namespace ClinicaApp
 {
-    public string IdTrabajador { get; set; } = Guid.NewGuid().ToString();
-    public string Nombre { get; set; } = string.Empty;
-    public string ApellidoPaterno { get; set; } = string.Empty;
-    public string ApellidoMaterno { get; set; } = string.Empty;
-    public string Oficina { get; set; } = string.Empty;
-    public string Departamento { get; set; } = string.Empty;
-    public string TipoContrato { get; set; } = string.Empty;
-    public string Turno { get; set; } = string.Empty;
-
-    public virtual bool ActualizarDatos()
+    public abstract class Trabajador
     {
-        return !string.IsNullOrWhiteSpace(Nombre);
-    }
+        public string IdTrabajador { get; set; }
+        public string Nombre { get; set; }
+        public string ApellidoPaterno { get; set; }
+        public string ApellidoMaterno { get; set; }
+        public string Oficina { get; set; }
+        public string Departamento { get; set; }
+        public string TipoContrato { get; set; }
+        public string Turno { get; set; }
 
-    public virtual void AsignarTurno(string turno)
-    {
-        Turno = turno;
-    }
-
-    public abstract string ObtenerInfoCompleta();
-
-    public virtual Reporte GenerarReporteLaboral()
-    {
-        return new Reporte
+        public Trabajador()
         {
-            Titulo = "Reporte Laboral",
-            Contenido = $"Trabajador: {Nombre} {ApellidoPaterno} - Turno: {Turno}",
-            FechaGeneracion = DateTime.Now
-        };
+            IdTrabajador = "T001";
+            Nombre = "";
+            ApellidoPaterno = "";
+            ApellidoMaterno = "";
+            Oficina = "";
+            Departamento = "";
+            TipoContrato = "";
+            Turno = "";
+        }
+
+        public virtual bool ActualizarDatos()
+        {
+            return true;
+        }
+
+        public virtual void AsignarTurno(string turno)
+        {
+            this.Turno = turno;
+        }
+
+        public abstract string ObtenerInfoCompleta();
+
+        public virtual Reporte GenerarReporteLaboral()
+        {
+            Reporte reporte = new Reporte();
+            reporte.Titulo = "Reporte Laboral";
+            reporte.Contenido = Nombre + " " + ApellidoPaterno + " - Turno: " + Turno;
+            return reporte;
+        }
     }
 }

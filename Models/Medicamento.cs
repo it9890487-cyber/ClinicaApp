@@ -1,10 +1,20 @@
-namespace ClinicaApp.Models;
-
-public class Medicamento
+namespace ClinicaApp
 {
-    public int IdMedicamento { get; set; }
-    public string Nombre { get; set; } = string.Empty;
-    public string Dosis { get; set; } = string.Empty;
-    public string Frecuencia { get; set; } = string.Empty;
-    public string Presentacion { get; set; } = string.Empty;
+    public class Medicamento
+    {
+        public int IdMedicamento { get; set; }
+        public string Nombre { get; set; }
+        public string Dosis { get; set; }
+        public string Frecuencia { get; set; }
+        public string Presentacion { get; set; }
+
+        public Medicamento()
+        {
+            IdMedicamento = 0;
+            Nombre = "";
+            Dosis = "";
+            Frecuencia = "";
+            Presentacion = "";
+        }
+    }
 }
